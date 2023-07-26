@@ -1,0 +1,14 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: plugin-text-diagram-settings
+spec:
+  forms:
+    - group: basic
+      label: 基本设置
+      formSchema:
+        - $formkit: text
+          name: mermaid_selector
+          label: mermaid-CSS选择器
+          value: ".text-diagram-code"
+          help: 用于匹配mermaid的CSS选择器

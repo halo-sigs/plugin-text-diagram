@@ -1,4 +1,4 @@
-package run.halo.starter;
+package run.halo.plugin.textdiagram;
 
 import org.pf4j.PluginWrapper;
 import org.springframework.stereotype.Component;
