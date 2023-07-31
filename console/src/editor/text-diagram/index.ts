@@ -1,11 +1,14 @@
 import {
-  Node,
-  mergeAttributes,
-  VueNodeViewRenderer,
   type Editor,
+  mergeAttributes,
+  Node,
   type Range,
+  VueNodeViewRenderer,
 } from "@tiptap/vue-3";
 import TextDiagramView from "./TextDiagramView.vue";
+import { markRaw } from "vue";
+import icon from "~icons/simple-icons/diagramsdotnet";
+
 export const ExtensionTextDiagram = Node.create({
   name: "text-diagram",
   inline: false,
@@ -17,7 +20,7 @@ export const ExtensionTextDiagram = Node.create({
   addAttributes() {
     return {
       type: {
-        default: 'mermaid',
+        default: "mermaid",
         parseHTML: (element) => {
           const type = element.getAttribute("type");
           if (!type) {
@@ -48,9 +51,9 @@ export const ExtensionTextDiagram = Node.create({
       getCommandMenuItems() {
         return {
           priority: 100,
-          icon: null,
+          icon: markRaw(icon),
           title: "文本绘图",
-          keywords: ["text-diagram"],
+          keywords: ["text-diagram", "wenbenhuitu"],
           command: ({ editor, range }: { editor: Editor; range: Range }) => {
             editor
               .chain()
