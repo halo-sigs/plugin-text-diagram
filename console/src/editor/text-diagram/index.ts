@@ -12,21 +12,45 @@ import icon from "~icons/simple-icons/diagramsdotnet";
 export const ExtensionTextDiagram = Node.create({
   name: "text-diagram",
   inline: false,
-  content: "text*",
+  content: "",
   marks: "",
   group: "block",
   code: true,
+  atom: true,
   defining: true,
   addAttributes() {
     return {
       type: {
         default: "mermaid",
-        parseHTML: (element) => {
-          const type = element.getAttribute("type");
-          if (!type) {
-            return null;
-          }
-          return type;
+        parseHTML: (element) => element.getAttribute("data-type"),
+        renderHTML: (attributes) => {
+          return !attributes.type
+            ? {}
+            : {
+                "data-type": attributes.type,
+              };
+        },
+      },
+      content: {
+        default: "",
+        parseHTML: (element) => element.getAttribute("data-content"),
+        renderHTML: (attributes) => {
+          return !attributes.content
+            ? {}
+            : {
+                "data-content": attributes.content,
+              };
+        },
+      },
+      src: {
+        default: "",
+        parseHTML: (element) => element.getAttribute("data-src"),
+        renderHTML: (attributes) => {
+          return !attributes.src
+            ? {}
+            : {
+                "data-src": attributes.src,
+              };
         },
       },
     };
@@ -34,12 +58,21 @@ export const ExtensionTextDiagram = Node.create({
   parseHTML() {
     return [
       {
-        tag: "text-diagram[type]",
+        tag: "text-diagram[data-type]",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["text-diagram", mergeAttributes(HTMLAttributes), 0];
+    return [
+      "text-diagram",
+      mergeAttributes(HTMLAttributes),
+      [
+        "img",
+        {
+          src: HTMLAttributes["data-src"],
+        },
+      ],
+    ];
   },
   addNodeView() {
     return VueNodeViewRenderer(TextDiagramView);
@@ -60,7 +93,7 @@ export const ExtensionTextDiagram = Node.create({
               .focus()
               .deleteRange(range)
               .insertContent([
-                { type: "text-diagram", attrs: { src: "" } },
+                { type: "text-diagram", attrs: {} },
                 { type: "paragraph", content: "" },
               ])
               .run();

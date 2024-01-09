@@ -23,7 +23,7 @@ const language = computed({
 // render as svg
 const doRenderPreview = async function () {
   const element = previewRef.value;
-  const graphDefinition = props.node.textContent;
+  const graphDefinition = props.node.attrs.content;
   switch (language.value) {
     case "mermaid": {
       // random element id
@@ -34,8 +34,8 @@ const doRenderPreview = async function () {
     }
     case "plantuml": {
       const url = compress(graphDefinition);
-      console.log(url);
-      element!.innerHTML = `<img src="${url}" />`;
+      props.updateAttributes({ src: url });
+      element!.innerHTML = `<img src="${url}"  alt="plantuml"/>`;
       break;
     }
     default:
@@ -47,7 +47,7 @@ const renderPreview = useDebounceFn(() => doRenderPreview(), 250);
 
 onMounted(() => {
   watch(
-    () => props.node.textContent,
+    () => props.node.attrs.content,
     () => {
       nextTick(() => {
         renderPreview();
@@ -83,10 +83,17 @@ onMounted(() => {
       </select>
     </div>
     <div class="panel">
-      <node-view-content as="pre" class="text-diagram-code" />
+      <textarea
+        class="text-diagram-code rounded-md border border-gray-300"
+        rows="5"
+        cols="30"
+        placeholder="input text"
+        :value="node.attrs.content"
+        @input="updateAttributes({ content: $event.target.value })"
+      />
       <div
         ref="previewRef"
-        class="mermaid text-dragram-preview"
+        class="text-dragram-preview"
         contenteditable="false"
       ></div>
     </div>
@@ -95,14 +102,15 @@ onMounted(() => {
 <style>
 .panel {
   display: flex;
-  color: beige;
+  padding: 5px;
 }
 
 .text-diagram-code {
-  width: 50%;
+  flex: 1;
+  padding: 5px;
 }
 
 .text-dragram-preview {
-  width: 50%;
+  flex: 1;
 }
 </style>
