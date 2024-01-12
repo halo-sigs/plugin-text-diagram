@@ -3,7 +3,7 @@ package run.halo.plugin.textdiagram;
 public class JSInjector {
     static String getParsedKatexScript(String mermaid_selector) {
         String katexScript = """
-            <script defer src="/plugins/plugin-text-diagram/assets/static/mermaid.min.js"></script>
+            <script defer src="/plugins/text-diagram/assets/static/mermaid.min.js"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                   const postBody = document.body
