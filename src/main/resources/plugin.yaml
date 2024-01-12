@@ -1,22 +1,19 @@
 apiVersion: plugin.halo.run/v1alpha1
 kind: Plugin
 metadata:
-  # The name defines how the plugin is invoked,A unique name
   name: plugin-text-diagram
 spec:
   enabled: true
   requires: ">=2.11.0"
   author:
     name: Xin Keng
-    website: https://github.com/gengxiaoxiaoxin
-  logo: https://halo.run/logo
-  # 'homepage' usually links to the GitHub repository of the plugin
-  homepage: https://github.com/gengxiaoxiaoxin/plugin-text-diagram
-  # 'displayName' explains what the plugin does in only a few words
-  displayName: "TextDiagram"
-  description: "为编辑器和文章渲染提供文本绘图支持"
+    website: https://github.com/xinkeng0
+  logo: logo.svg
+  homepage: https://github.com/halo-sigs/plugin-text-diagram
+  displayName: "文本绘图"
+  description: "使用 Mermaid 和 PlantUML 为编辑器和文章渲染提供文本绘图支持"
   settingName: plugin-text-diagram-settings
   configMapName: plugin-text-diagram-configMap
   license:
     - name: "GPL-3.0"
-      url: "https://github.com/halo-dev/plugin-starter/blob/main/LICENSE"
+      url: "https://github.com/halo-sigs/plugin-text-diagram/blob/main/LICENSE"
