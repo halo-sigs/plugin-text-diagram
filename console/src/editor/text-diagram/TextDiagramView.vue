@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { NodeViewContent, nodeViewProps, NodeViewWrapper } from "@tiptap/vue-3";
+import { nodeViewProps, NodeViewWrapper } from "@halo-dev/richtext-editor";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import mermaid from "mermaid";
 import { compress } from "./plantuml/encoder";
