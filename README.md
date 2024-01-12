@@ -31,7 +31,7 @@ example：`.class1,.class2`
 ## 开发环境
 
 ```bash
-git clone git@github.com:xinkeng0/plugin-text-diagram.git
+git clone git@github.com:halo-sigs/plugin-text-diagram.git
 
 # 或者当你 fork 之后
 
@@ -39,7 +39,7 @@ git clone git@github.com:{your_github_id}/plugin-text-diagram.git
 ```
 
 ```bash
-cd path/to/plugin-katex
+cd path/to/plugin-text-diagram
 ```
 
 ```bash

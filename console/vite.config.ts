@@ -5,7 +5,7 @@ import Vue from "@vitejs/plugin-vue";
 import Icons from "unplugin-icons/vite";
 import { viteStaticCopy as ViteStaticCopy } from "vite-plugin-static-copy";
 
-const pluginEntryName = "plugin-text-diagram";
+const pluginEntryName = "text-diagram";
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
