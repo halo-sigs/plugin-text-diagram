@@ -1,7 +1,7 @@
 apiVersion: plugin.halo.run/v1alpha1
 kind: Plugin
 metadata:
-  name: plugin-text-diagram
+  name: text-diagram
 spec:
   enabled: true
   requires: ">=2.11.0"
