@@ -4,7 +4,7 @@ import {
   Node,
   type Range,
   VueNodeViewRenderer,
-} from "@tiptap/vue-3";
+} from "@halo-dev/richtext-editor";
 import TextDiagramView from "./TextDiagramView.vue";
 import { markRaw } from "vue";
 import icon from "~icons/simple-icons/diagramsdotnet";
