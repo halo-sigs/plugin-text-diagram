@@ -9,7 +9,11 @@ import TextDiagramView from "./TextDiagramView.vue";
 import { markRaw } from "vue";
 import icon from "~icons/simple-icons/diagramsdotnet";
 
-export const ExtensionTextDiagram = Node.create({
+export type TextDiagramOptions = {
+  HTMLAttributes: Record<string, any>;
+};
+
+export const ExtensionTextDiagram = Node.create<TextDiagramOptions>({
   name: "text-diagram",
   inline: false,
   content: "",
@@ -62,17 +66,33 @@ export const ExtensionTextDiagram = Node.create({
       },
     ];
   },
-  renderHTML({ HTMLAttributes }) {
-    return [
-      "text-diagram",
-      mergeAttributes(HTMLAttributes),
-      [
-        "img",
-        {
-          src: HTMLAttributes["data-src"],
-        },
-      ],
-    ];
+  renderHTML({ node, HTMLAttributes }) {
+    switch (node.attrs.type) {
+      case "plantuml":
+        return [
+          "text-diagram",
+          mergeAttributes(HTMLAttributes),
+          [
+            "img",
+            {
+              src: HTMLAttributes["data-src"],
+            },
+          ],
+        ];
+      case "mermaid":
+        return [
+          "text-diagram",
+          mergeAttributes(HTMLAttributes),
+          node.attrs.content,
+        ];
+      default:
+        // unknown type
+        return [
+          "text-diagram",
+          mergeAttributes(HTMLAttributes),
+          node.attrs.content,
+        ];
+    }
   },
   addNodeView() {
     return VueNodeViewRenderer(TextDiagramView);
