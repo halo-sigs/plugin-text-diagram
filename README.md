@@ -24,7 +24,7 @@
    
 CSS-Selector语法，用来查找渲染的mermaid-Dom。
 
-默认值为：`text-diagram[type="mermaid"]`（本插件扩展默认编辑器生成的行内公式Dom），如需兼容其他编辑器，则设置为相应的Selector即可（CSS-Selector支持或，`,`分隔即可）
+默认值为：`text-diagram[data-type="mermaid"]`（本插件扩展默认编辑器生成的行内公式Dom），如需兼容其他编辑器，则设置为相应的Selector即可（CSS-Selector支持或，`,`分隔即可）
 
 example：`.class1,.class2`
 
