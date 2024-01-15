@@ -66,23 +66,22 @@ onMounted(() => {
 });
 </script>
 <template>
-  <node-view-wrapper>
-    <div>
-      <select
-        v-model="language"
-        class="block px-2 py-1.5 text-sm text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-        contenteditable="false"
-      >
-        <option
-          v-for="(language, index) in languages"
-          :key="index"
-          :value="language"
+  <node-view-wrapper class="editor-block text-diagram-container">
+    <div class="text-diagram-nav">
+      <div class="text-diagram-nav-start">文本绘图</div>
+      <div class="text-diagram-nav-end">
+        <select
+          v-model="language"
+          class="text-diagram-type-select block px-2 py-1.5 text-sm text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          contenteditable="false"
         >
-          {{ language }}
-        </option>
-      </select>
+          <option v-for="(lan, index) in languages" :key="index" :value="lan">
+            {{ language }}
+          </option>
+        </select>
+      </div>
     </div>
-    <div class="panel">
+    <div class="text-diagram-editor-panel">
       <textarea
         class="text-diagram-code rounded-md border border-gray-300"
         rows="5"
@@ -93,16 +92,38 @@ onMounted(() => {
       />
       <div
         ref="previewRef"
-        class="text-dragram-preview"
+        class="text-diagram-preview"
         contenteditable="false"
       ></div>
     </div>
   </node-view-wrapper>
 </template>
 <style>
-.panel {
+.text-diagram-container {
+  border: 1px #e7e7e7 solid;
+}
+
+.text-diagram-nav {
+  border-bottom: 1px #e7e7e7 solid;
+  display: flex;
+}
+
+.text-diagram-nav-start {
+  flex: 1;
+  line-height: 2;
+}
+
+.text-diagram-nav-end {
+  justify-content: flex-end;
+}
+
+.text-diagram-editor-panel {
   display: flex;
   padding: 5px;
+}
+
+.text-diagram-type-select {
+  width: 7em;
 }
 
 .text-diagram-code {
@@ -110,7 +131,8 @@ onMounted(() => {
   padding: 5px;
 }
 
-.text-dragram-preview {
+.text-diagram-preview {
   flex: 1;
+  border-left: 1px #e7e7e7 solid;
 }
 </style>
