@@ -4,23 +4,30 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import mermaid from "mermaid";
 import { compress } from "./plantuml/encoder";
 import { useDebounceFn } from "@vueuse/core";
+import IcOutlineTipsAndUpdates from "~icons/ic/outline-tips-and-updates";
+import IcOutlineFullscreen from "~icons/ic/outline-fullscreen";
+import IcOutlineFullscreenExit from "~icons/ic/outline-fullscreen-exit";
 
 mermaid.initialize({ startOnLoad: false });
 
 const props = defineProps(nodeViewProps);
 const previewRef = ref<HTMLElement>();
+const fullscreen = ref(false);
 
 const languages = [
   {
     value: "mermaid",
     label: "Mermaid",
+    document: "https://mermaid.js.org/",
   },
   {
     value: "plantuml",
     label: "PlantUML",
+    document: "https://plantuml.com/zh/",
   },
 ];
-const language = computed({
+
+const languageValue = computed({
   get: () => {
     return props.node?.attrs.type;
   },
@@ -29,22 +36,31 @@ const language = computed({
   },
 });
 
+const language = computed(() => {
+  return languages.find((lan) => lan.value === languageValue.value);
+});
+
 // render as svg
 const doRenderPreview = async function () {
   const element = previewRef.value;
+  if (!element) return;
   const graphDefinition = props.node.attrs.content;
-  switch (language.value) {
+  switch (languageValue.value) {
     case "mermaid": {
       // random element id
       const id = `mermaid-${Date.now()}`;
-      const { svg } = await mermaid.render(id, graphDefinition, element);
-      element!.innerHTML = svg;
+      try {
+        const { svg } = await mermaid.render(id, graphDefinition, element);
+        element.innerHTML = svg;
+      } catch (error) {
+        element.innerHTML = `<pre style="color: red; background-color: #f6f8fa">${error}</pre>`;
+      }
       break;
     }
     case "plantuml": {
       const url = compress(graphDefinition);
       props.updateAttributes({ src: url });
-      element!.innerHTML = `<img src="${url}"  alt="plantuml"/>`;
+      element.innerHTML = `<img src="${url}" alt="plantuml"/>`;
       break;
     }
     default:
@@ -73,14 +89,22 @@ onMounted(() => {
   );
   renderPreview();
 });
+
+// text diagram editor
+function onEditorChange(value: string) {
+  props.updateAttributes({ content: value });
+}
 </script>
 <template>
-  <node-view-wrapper class="editor-block text-diagram-container">
+  <node-view-wrapper
+    class="text-diagram-container"
+    :class="{ 'text-diagram-fullscreen': fullscreen }"
+  >
     <div class="text-diagram-nav">
-      <div class="text-diagram-nav-start">文本绘图</div>
-      <div class="text-diagram-nav-end">
+      <div class="text-diagram-nav-start">
+        <div>文本绘图</div>
         <select
-          v-model="language"
+          v-model="languageValue"
           class="text-diagram-type-select block px-2 py-1.5 text-sm text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
           contenteditable="false"
         >
@@ -92,17 +116,33 @@ onMounted(() => {
             {{ lan.label }}
           </option>
         </select>
+        <a
+          v-if="language"
+          v-tooltip="`查阅 ${language.label} 的文档`"
+          :href="language.document"
+          target="_blank"
+        >
+          <IcOutlineTipsAndUpdates />
+        </a>
+      </div>
+      <div class="text-diagram-nav-end">
+        <div
+          class="text-diagram-fullscreen-icon"
+          @click="fullscreen = !fullscreen"
+        >
+          <IcOutlineFullscreenExit v-if="fullscreen" v-tooltip="'退出全屏'" />
+          <IcOutlineFullscreen v-else v-tooltip="'全屏'" />
+        </div>
       </div>
     </div>
     <div class="text-diagram-editor-panel">
-      <textarea
-        class="text-diagram-code rounded-md border border-gray-300"
-        rows="5"
-        cols="30"
-        placeholder="input text"
-        :value="node.attrs.content"
-        @input="updateAttributes({ content: $event.target.value })"
-      />
+      <div class="text-diagram-code">
+        <VCodemirror
+          :model-value="node.attrs.content"
+          height="100%"
+          @change="onEditorChange"
+        />
+      </div>
       <div
         ref="previewRef"
         class="text-diagram-preview"
@@ -114,16 +154,24 @@ onMounted(() => {
 <style>
 .text-diagram-container {
   border: 1px #e7e7e7 solid;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.75em;
 }
 
 .text-diagram-nav {
   border-bottom: 1px #e7e7e7 solid;
   display: flex;
+  padding: 5px 10px;
+  align-items: center;
 }
 
 .text-diagram-nav-start {
   flex: 1;
-  line-height: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
 }
 
 .text-diagram-nav-end {
@@ -131,8 +179,10 @@ onMounted(() => {
 }
 
 .text-diagram-editor-panel {
-  display: flex;
-  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
 }
 
 .text-diagram-type-select {
@@ -140,12 +190,45 @@ onMounted(() => {
 }
 
 .text-diagram-code {
-  flex: 1;
-  padding: 5px;
+  height: 100%;
+  border-right: 1px #e7e7e7 solid;
 }
 
 .text-diagram-preview {
-  flex: 1;
-  border-left: 1px #e7e7e7 solid;
+  padding: 5px;
+  height: 100%;
+}
+
+.text-diagram-preview svg {
+  width: 100%;
+}
+
+.text-diagram-code img {
+  width: 100%;
+}
+
+.text-diagram-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  margin-top: 0;
+}
+
+.text-diagram-fullscreen-icon {
+  cursor: pointer;
+}
+
+.text-diagram-fullscreen-icon svg {
+  font-size: 18px;
+}
+
+.text-diagram-fullscreen-icon:hover {
+  color: #999;
 }
 </style>
