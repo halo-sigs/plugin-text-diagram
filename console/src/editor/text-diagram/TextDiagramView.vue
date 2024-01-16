@@ -4,8 +4,9 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import mermaid from "mermaid";
 import { compress } from "./plantuml/encoder";
 import { useDebounceFn } from "@vueuse/core";
-import { VButton } from "@halo-dev/components";
 import IcOutlineTipsAndUpdates from "~icons/ic/outline-tips-and-updates";
+import IcOutlineFullscreen from "~icons/ic/outline-fullscreen";
+import IcOutlineFullscreenExit from "~icons/ic/outline-fullscreen-exit";
 
 mermaid.initialize({ startOnLoad: false });
 
@@ -125,9 +126,13 @@ function onEditorChange(value: string) {
         </a>
       </div>
       <div class="text-diagram-nav-end">
-        <VButton size="sm" @click="fullscreen = !fullscreen">
-          {{ fullscreen ? "退出全屏" : "全屏" }}
-        </VButton>
+        <div
+          class="text-diagram-fullscreen-icon"
+          @click="fullscreen = !fullscreen"
+        >
+          <IcOutlineFullscreenExit v-if="fullscreen" v-tooltip="'退出全屏'" />
+          <IcOutlineFullscreen v-else v-tooltip="'全屏'" />
+        </div>
       </div>
     </div>
     <div class="text-diagram-editor-panel">
@@ -213,5 +218,17 @@ function onEditorChange(value: string) {
   height: 100%;
   background: #fff;
   margin-top: 0;
+}
+
+.text-diagram-fullscreen-icon {
+  cursor: pointer;
+}
+
+.text-diagram-fullscreen-icon svg {
+  font-size: 18px;
+}
+
+.text-diagram-fullscreen-icon:hover {
+  color: #999;
 }
 </style>
