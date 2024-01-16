@@ -10,7 +10,16 @@ mermaid.initialize({ startOnLoad: false });
 const props = defineProps(nodeViewProps);
 const previewRef = ref<HTMLElement>();
 
-const languages = ["mermaid", "plantuml"];
+const languages = [
+  {
+    value: "mermaid",
+    label: "Mermaid",
+  },
+  {
+    value: "plantuml",
+    label: "PlantUML",
+  },
+];
 const language = computed({
   get: () => {
     return props.node?.attrs.type;
@@ -75,8 +84,12 @@ onMounted(() => {
           class="text-diagram-type-select block px-2 py-1.5 text-sm text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
           contenteditable="false"
         >
-          <option v-for="(lan, index) in languages" :key="index" :value="lan">
-            {{ language }}
+          <option
+            v-for="(lan, index) in languages"
+            :key="index"
+            :value="lan.value"
+          >
+            {{ lan.label }}
           </option>
         </select>
       </div>
