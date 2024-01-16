@@ -1,32 +1,35 @@
-# plugin-text-diagram
+# 文本绘图
 
-为默认编辑器和文章渲染提供 文本绘图（mermaid） 支持。
+为 Halo 2 的默认编辑器和文章渲染提供文本绘图（Mermaid & PlantUML）支持。
 
-- [x] mermaid
-- [x] plantuml
+![Text Diagram](./images/plugin-text-diagram-screenshot.webp)
 
 ## 使用方式
 
 1. 下载，目前提供以下两个下载方式：
     - GitHub Releases：访问 [Releases](https://github.com/xinkeng0/plugin-text-diagram/releases) 下载 Assets 中的 JAR 文件。
+    - Halo 官方应用市场：<https://www.halo.run/store/apps/app-ahBRi>
 2. 安装，插件安装和更新方式可参考：<https://docs.halo.run/user-guide/plugins>。
 
 ## 用法说明
 
 ### 默认编辑器
-增添了`/`快捷方式，文本绘图。
+
+可以在指令菜单（/）中找到 **文本绘图** 菜单项，选择即可插入新的文本绘图块。
+
 ### 文章页渲染
+
 此插件安装之后，支持渲染文本绘图。
 
 配置项：
 
 1. mermaid_selector
-   
-CSS-Selector语法，用来查找渲染的mermaid-Dom。
 
-默认值为：`text-diagram[data-type="mermaid"]`（本插件扩展默认编辑器生成的行内公式Dom），如需兼容其他编辑器，则设置为相应的Selector即可（CSS-Selector支持或，`,`分隔即可）
+   CSS-Selector语法，用来查找渲染的mermaid-Dom。
 
-example：`.class1,.class2`
+   默认值为：`text-diagram[data-type="mermaid"]`（本插件扩展默认编辑器生成的行内公式Dom），如需兼容其他编辑器，则设置为相应的Selector即可（CSS-Selector支持或，`,`分隔即可）
+
+   example：`.class1,.class2`
 
 ## 开发环境
 
