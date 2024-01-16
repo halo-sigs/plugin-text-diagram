@@ -25,7 +25,8 @@ export function compress(s: string) {
   const encoded = encode64(deflate);
   // console.log("base64:" + encoded);
   // Base64 encoded
-  return `http://www.plantuml.com/plantuml/svg/${encoded}`;
+
+  return `https://www.plantuml.com/plantuml/svg/${encoded}`;
 }
 
 function encode64(data: string) {
