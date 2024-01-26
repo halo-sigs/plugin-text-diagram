@@ -4,6 +4,7 @@ import {
   Node,
   type Range,
   VueNodeViewRenderer,
+  ToolboxItem,
 } from "@halo-dev/richtext-editor";
 import TextDiagramView from "./TextDiagramView.vue";
 import { markRaw } from "vue";
@@ -100,6 +101,29 @@ export const ExtensionTextDiagram = Node.create<TextDiagramOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
+      getToolboxItems({ editor }: { editor: Editor }) {
+        return [
+          {
+            priority: 100,
+            component: markRaw(ToolboxItem),
+            props: {
+              editor,
+              icon: markRaw(icon),
+              title: "文本绘图",
+              action: () => {
+                editor
+                  .chain()
+                  .focus()
+                  .insertContent([
+                    { type: "text-diagram", attrs: {} },
+                    { type: "paragraph", content: "" },
+                  ])
+                  .run();
+              },
+            },
+          },
+        ];
+      },
       // 扩展指令项
       getCommandMenuItems() {
         return {
