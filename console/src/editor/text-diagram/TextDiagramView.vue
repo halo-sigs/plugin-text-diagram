@@ -1,14 +1,21 @@
 <script lang="ts" setup>
 import { nodeViewProps, NodeViewWrapper } from "@halo-dev/richtext-editor";
-import { computed, nextTick, onMounted, ref, watch } from "vue";
-import mermaid from "mermaid";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { compress } from "./plantuml/encoder";
-import { useDebounceFn } from "@vueuse/core";
+import { useDebounceFn, useScriptTag } from "@vueuse/core";
 import IcOutlineTipsAndUpdates from "~icons/ic/outline-tips-and-updates";
 import IcOutlineFullscreen from "~icons/ic/outline-fullscreen";
 import IcOutlineFullscreenExit from "~icons/ic/outline-fullscreen-exit";
 
-mermaid.initialize({ startOnLoad: false });
+// Import mermaid by script tag to resolve bundle size issue
+// After this, mermaid library will be load after component mounted
+const { load, unload } = useScriptTag(
+  "/plugins/text-diagram/assets/static/mermaid.min.js",
+  () => {
+    window.mermaid.initialize({ startOnLoad: false });
+  },
+  { manual: true }
+);
 
 const props = defineProps(nodeViewProps);
 const previewRef = ref<HTMLElement>();
@@ -50,7 +57,11 @@ const doRenderPreview = async function () {
       // random element id
       const id = `mermaid-${Date.now()}`;
       try {
-        const { svg } = await mermaid.render(id, graphDefinition, element);
+        const { svg } = await window.mermaid.render(
+          id,
+          graphDefinition,
+          element
+        );
         element.innerHTML = svg;
       } catch (error) {
         element.innerHTML = `<pre style="color: red; background-color: #f6f8fa">${error}</pre>`;
@@ -70,7 +81,10 @@ const doRenderPreview = async function () {
 
 const renderPreview = useDebounceFn(() => doRenderPreview(), 250);
 
-onMounted(() => {
+onMounted(async () => {
+  // load mermaid library
+  await load();
+
   watch(
     () => props.node.attrs.content,
     () => {
@@ -88,6 +102,10 @@ onMounted(() => {
     }
   );
   renderPreview();
+});
+
+onUnmounted(() => {
+  unload();
 });
 
 // text diagram editor
