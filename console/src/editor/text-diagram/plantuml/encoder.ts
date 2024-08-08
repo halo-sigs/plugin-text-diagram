@@ -10,16 +10,18 @@ import pako from "pako";
 export function compress(s: string) {
   // console.log("Original:" + s);
   // Encoded in UTF-8
-  const utf8 = unescape(encodeURIComponent(s));
+  // const utf8 = unescape(encodeURIComponent(s));
+  const utf8 = new TextEncoder().encode(s);
   console.log("UTF-8:" + utf8);
   // Compressed using Deflate algorithm
-  const deflateRaw = pako.deflateRaw(utf8, {
+  const deflate = pako.deflateRaw(utf8, {
     level: 9,
   });
   // console.log(`pako deflateRaw: ${deflateRaw}`);
+  // I originally needed to convert `Uint8Array` to a string, and used `Uint16Array` for handling Chinese characters, but now it's no longer necessary."
   // unit8 to unit16
-  const deflateRaw16 = new Uint16Array(deflateRaw);
-  const deflate = new TextDecoder("utf-16").decode(deflateRaw16);
+  // const deflateRaw16 = new Uint16Array(deflateRaw);
+  // const deflate = new TextDecoder("utf-16").decode(deflateRaw16);
   // console.log("pako deflate:" + deflate);
   // Reencoded in ASCII using a transformation close to base64
   const encoded = encode64(deflate);
@@ -29,19 +31,15 @@ export function compress(s: string) {
   return `https://www.plantuml.com/plantuml/svg/${encoded}`;
 }
 
-function encode64(data: string) {
+function encode64(data: Uint8Array) {
   let r = "";
   for (let i = 0; i < data.length; i += 3) {
     if (i + 2 == data.length) {
-      r += append3bytes(data.charCodeAt(i), data.charCodeAt(i + 1), 0);
+      r += append3bytes(data[i], data[i + 1], 0);
     } else if (i + 1 == data.length) {
-      r += append3bytes(data.charCodeAt(i), 0, 0);
+      r += append3bytes(data[i], 0, 0);
     } else {
-      r += append3bytes(
-        data.charCodeAt(i),
-        data.charCodeAt(i + 1),
-        data.charCodeAt(i + 2)
-      );
+      r += append3bytes(data[i], data[i + 1], data[i + 2]);
     }
   }
   return r;
