@@ -16,7 +16,7 @@
     "@halo-dev/richtext-editor": "0.0.0-alpha.33",
     "@vueuse/core": "^10.7.1",
     "canvas-confetti": "^1.6.0",
-    "mermaid": "^10.3.0",
+    "mermaid": "^11.4.1",
     "pako": "^2.1.0",
     "vue": "^3.3.4"
   },
