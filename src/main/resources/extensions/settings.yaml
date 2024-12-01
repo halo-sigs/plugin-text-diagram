@@ -8,6 +8,11 @@ spec:
       label: 基本设置
       formSchema:
         - $formkit: text
+          name: dark_class_selector
+          label: 暗黑模式的选择器
+          value: "html[class~=dark]"
+          help: 用于匹配暗黑模式的CSS选择器
+        - $formkit: text
           name: mermaid_selector
           label: mermaid-CSS选择器
           value: "text-diagram[data-type=mermaid]"
