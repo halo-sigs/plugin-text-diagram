@@ -15,15 +15,15 @@ public class DefaultPostContentHandler implements ReactivePostContentHandler {
 
     private final ReactiveSettingFetcher reactiveSettingFetcher;
 
-    private static void injectJS(PostContentContext contentContext, String mermaid_selector) {
-        String parsedScript = JSInjector.getParsedKatexScript(mermaid_selector);
+    private static void injectJS(PostContentContext contentContext, BasicConfig basicConfig) {
+        String parsedScript = JSInjector.getParsedKatexScript(basicConfig.getDark_class_selector(),basicConfig.getMermaid_selector());
         contentContext.setContent(parsedScript + "\n" + contentContext.getContent());
     }
 
     @Override
     public Mono<PostContentContext> handle(PostContentContext contentContext) {
         return reactiveSettingFetcher.fetch("basic", BasicConfig.class).map(basicConfig -> {
-            injectJS(contentContext, basicConfig.getMermaid_selector());
+            injectJS(contentContext, basicConfig);
             return contentContext;
         }).onErrorResume(e -> {
             log.error("TextDiagram PostContent handle failed", Throwables.getRootCause(e));
