@@ -22,8 +22,15 @@
 此插件安装之后，支持渲染文本绘图。
 
 配置项：
+1. dark_class_selector
 
-1. mermaid_selector
+   CSS-Selector语法，用来查找可以表示当前用户是否是暗黑主题的Dom。
+   
+   默认值为：`html[class~=dark]`（官方theme-earth暗黑模式class），如需兼容其他主题，则设置为相应的Selector即可（CSS-Selector支持A或B，`,`分隔即可）
+   
+   example：`html[class~=dark],html[data-color-scheme=dark]`
+
+3. mermaid_selector
 
    CSS-Selector语法，用来查找渲染的mermaid-Dom。
 
