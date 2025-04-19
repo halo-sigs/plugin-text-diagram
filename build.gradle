@@ -27,17 +27,28 @@ test {
     useJUnitPlatform()
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
 node {
     nodeProjectDir = file("${project.projectDir}/console")
 }
 
-task buildFrontend(type: PnpmTask) {
+tasks.register('buildFrontend', PnpmTask) {
     args = ['build']
+    dependsOn('installDepsForUI')
+}
+
+tasks.register('installDepsForUI', PnpmTask) {
+    args = ['install']
 }
 
 build {
     // build frontend before build
-    tasks.getByName('compileJava').dependsOn('buildFrontend')
+    tasks.named('compileJava').configure {
+        dependsOn('buildFrontend')
+    }
 }
 
 halo {
