@@ -11,11 +11,3 @@ declare module "*.vue" {
     export default component;
   }
 }
-
-import type { Mermaid } from "mermaid";
-
-declare global {
-  interface Window {
-    mermaid: Mermaid;
-  }
-}

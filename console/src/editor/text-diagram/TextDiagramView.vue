@@ -1,21 +1,11 @@
 <script lang="ts" setup>
 import { nodeViewProps, NodeViewWrapper } from "@halo-dev/richtext-editor";
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { compress } from "./plantuml/encoder";
-import { useDebounceFn, useScriptTag } from "@vueuse/core";
+import { useDebounceFn } from "@vueuse/core";
 import IcOutlineTipsAndUpdates from "~icons/ic/outline-tips-and-updates";
 import IcOutlineFullscreen from "~icons/ic/outline-fullscreen";
 import IcOutlineFullscreenExit from "~icons/ic/outline-fullscreen-exit";
-
-// Import mermaid by script tag to resolve bundle size issue
-// After this, mermaid library will be load after component mounted
-const { load, unload } = useScriptTag(
-  "/plugins/text-diagram/assets/static/mermaid.min.js",
-  () => {
-    window.mermaid.initialize({ startOnLoad: false });
-  },
-  { manual: true }
-);
 
 const props = defineProps(nodeViewProps);
 const previewRef = ref<HTMLElement>();
@@ -57,7 +47,8 @@ const doRenderPreview = async function () {
       // random element id
       const id = `mermaid-${Date.now()}`;
       try {
-        const { svg } = await window.mermaid.render(
+        const mermaid = await import("mermaid");
+        const { svg } = await mermaid.default.render(
           id,
           graphDefinition,
           element
@@ -82,9 +73,6 @@ const doRenderPreview = async function () {
 const renderPreview = useDebounceFn(() => doRenderPreview(), 250);
 
 onMounted(async () => {
-  // load mermaid library
-  await load();
-
   watch(
     () => props.node.attrs.content,
     () => {
@@ -102,10 +90,6 @@ onMounted(async () => {
     }
   );
   renderPreview();
-});
-
-onUnmounted(() => {
-  unload();
 });
 
 // text diagram editor
