@@ -61,7 +61,9 @@ const doRenderPreview = async function () {
     }
     case "plantuml": {
       const url = compress(graphDefinition);
-      props.updateAttributes({ src: url });
+      if (props.node.attrs.src !== url) {
+        props.updateAttributes({ src: url });
+      }
       element.innerHTML = `<img src="${url}" alt="plantuml"/>`;
       break;
     }
