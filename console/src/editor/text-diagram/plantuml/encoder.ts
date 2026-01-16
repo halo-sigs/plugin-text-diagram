@@ -12,7 +12,6 @@ export function compress(s: string) {
   // Encoded in UTF-8
   // const utf8 = unescape(encodeURIComponent(s));
   const utf8 = new TextEncoder().encode(s);
-  console.log("UTF-8:" + utf8);
   // Compressed using Deflate algorithm
   const deflate = pako.deflateRaw(utf8, {
     level: 9,

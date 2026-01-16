@@ -9,91 +9,90 @@ import {
 import TextDiagramView from "./TextDiagramView.vue";
 import { markRaw } from "vue";
 import icon from "~icons/simple-icons/diagramsdotnet";
+import { ExtensionOptions } from "@halo-dev/richtext-editor/dist/types";
 
-export type TextDiagramOptions = {
-  HTMLAttributes: Record<string, any>;
-};
-
-export const ExtensionTextDiagram = Node.create<TextDiagramOptions>({
+export const ExtensionTextDiagram = Node.create<ExtensionOptions>({
   name: "text-diagram",
   inline: false,
-  content: "",
-  marks: "",
   group: "block",
   code: true,
   atom: true,
-  defining: true,
+
   addAttributes() {
     return {
       type: {
         default: "mermaid",
         parseHTML: (element) => element.getAttribute("data-type"),
         renderHTML: (attributes) => {
-          return !attributes.type
-            ? {}
-            : {
-                "data-type": attributes.type,
-              };
+          return {
+            "data-type": attributes.type,
+          };
         },
       },
       content: {
         default: "",
         parseHTML: (element) => element.getAttribute("data-content"),
         renderHTML: (attributes) => {
-          return !attributes.content
-            ? {}
-            : {
-                "data-content": attributes.content,
-              };
+          return {
+            "data-content": attributes.content,
+          };
         },
       },
-      src: {
-        default: "",
-        parseHTML: (element) => element.getAttribute("data-src"),
-        renderHTML: (attributes) => {
-          return !attributes.src
-            ? {}
-            : {
-                "data-src": attributes.src,
-              };
-        },
+      render: {
+        default: null,
+        rendered: false,
       },
     };
   },
   parseHTML() {
     return [
       {
-        tag: "text-diagram[data-type]",
+        tag: "text-diagram[data-type='mermaid']",
+        getAttrs: (element) => {
+          const firstChild = element.firstElementChild;
+          if (firstChild?.nodeType === 1) {
+            return {
+              render: firstChild.outerHTML,
+            };
+          }
+          return {
+            render: null,
+          };
+        },
+      },
+      {
+        tag: "text-diagram[data-type='plantuml']",
+        getAttrs: (element) => {
+          const firstChild = element.firstElementChild;
+          if (firstChild?.tagName === "IMG") {
+            return {
+              render: firstChild.outerHTML,
+            };
+          }
+          return {
+            render: null,
+          };
+        },
       },
     ];
   },
   renderHTML({ node, HTMLAttributes }) {
-    switch (node.attrs.type) {
-      case "plantuml":
-        return [
-          "text-diagram",
-          mergeAttributes(HTMLAttributes),
-          [
-            "img",
-            {
-              src: HTMLAttributes["data-src"],
-            },
-          ],
-        ];
-      case "mermaid":
-        return [
-          "text-diagram",
-          mergeAttributes(HTMLAttributes),
-          node.attrs.content,
-        ];
-      default:
-        // unknown type
-        return [
-          "text-diagram",
-          mergeAttributes(HTMLAttributes),
-          node.attrs.content,
-        ];
+    const render = node.attrs.render;
+    if (!render) {
+      return [
+        "text-diagram",
+        mergeAttributes(HTMLAttributes),
+        node.attrs.content,
+      ];
     }
+
+    const diagram = document.createElement("text-diagram");
+    diagram.innerHTML = render;
+    diagram.setAttribute("data-type", node.attrs.type);
+    diagram.setAttribute("data-content", node.attrs.content);
+    return {
+      dom: diagram,
+    };
   },
   addNodeView() {
     return VueNodeViewRenderer(TextDiagramView);
@@ -124,7 +123,6 @@ export const ExtensionTextDiagram = Node.create<TextDiagramOptions>({
           },
         ];
       },
-      // 扩展指令项
       getCommandMenuItems() {
         return {
           priority: 100,

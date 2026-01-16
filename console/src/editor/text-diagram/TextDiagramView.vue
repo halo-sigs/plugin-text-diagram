@@ -24,6 +24,15 @@ const languages = [
   },
 ];
 
+const render = computed({
+  get: () => {
+    return props.node.attrs.render;
+  },
+  set: (render: string) => {
+    props.updateAttributes({ render });
+  },
+});
+
 const languageValue = computed({
   get: () => {
     return props.node?.attrs.type;
@@ -39,6 +48,7 @@ const language = computed(() => {
 
 // render as svg
 const doRenderPreview = async function () {
+  console.log("doRenderPreview");
   const element = previewRef.value;
   if (!element) return;
   const graphDefinition = props.node.attrs.content;
@@ -53,18 +63,15 @@ const doRenderPreview = async function () {
           graphDefinition,
           element
         );
-        element.innerHTML = svg;
+        render.value = svg;
       } catch (error) {
-        element.innerHTML = `<pre style="color: red; background-color: #f6f8fa">${error}</pre>`;
+        render.value = `<pre style="color: red; background-color: #f6f8fa">${error}</pre>`;
       }
       break;
     }
     case "plantuml": {
       const url = compress(graphDefinition);
-      if (props.node.attrs.src !== url) {
-        props.updateAttributes({ src: url });
-      }
-      element.innerHTML = `<img src="${url}" alt="plantuml"/>`;
+      render.value = `<img src="${url}" alt="plantuml"/>`;
       break;
     }
     default:
@@ -74,25 +81,29 @@ const doRenderPreview = async function () {
 
 const renderPreview = useDebounceFn(() => doRenderPreview(), 250);
 
-onMounted(async () => {
-  watch(
-    () => props.node.attrs.content,
-    () => {
-      nextTick(() => {
-        renderPreview();
-      });
-    }
-  );
-  watch(
-    () => props.node.attrs.type,
-    () => {
-      nextTick(() => {
-        renderPreview();
-      });
-    }
-  );
+onMounted(() => {
+  if (render.value) {
+    return;
+  }
   renderPreview();
 });
+
+watch(
+  () => props.node.attrs.content,
+  () => {
+    nextTick(() => {
+      renderPreview();
+    });
+  }
+);
+watch(
+  () => props.node.attrs.type,
+  () => {
+    nextTick(() => {
+      renderPreview();
+    });
+  }
+);
 
 // text diagram editor
 function onEditorChange(value: string) {
@@ -147,11 +158,14 @@ function onEditorChange(value: string) {
           @change="onEditorChange"
         />
       </div>
+      <!-- eslint-disable vue/no-v-html -->
       <div
         ref="previewRef"
         class="text-diagram-preview"
         contenteditable="false"
+        v-html="render"
       ></div>
+      <!-- eslint-enable vue/no-v-html -->
     </div>
   </node-view-wrapper>
 </template>
