@@ -22,7 +22,7 @@ export default rsbuildConfig({
         copy: [
           {
             from: resolve(__dirname, "node_modules/mermaid/dist/mermaid.min.js"),
-            to: resolve(__dirname, outDir, "assets/static/"),
+            to: resolve(__dirname, outDir, "../static/"),
           },
         ],
       },
