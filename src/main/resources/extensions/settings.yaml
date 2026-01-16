@@ -13,14 +13,14 @@ spec:
           value: "html[class~=dark]"
           help: 用于匹配暗黑模式的CSS选择器
         - $formkit: checkbox
-          label: 启用客户 Mermaid 端渲染
-          help: 仅在使用第三方编辑器时需开启
           name: enable_client_mermaid_render
-          key: enable_client_mermaid_render
           id: enable_client_mermaid_render
+          key: enable_client_mermaid_render
+          label: 启用客户 Mermaid 端渲染
+          help: 使用第三方编辑器时，需要启用此项以确保 Mermaid 正确渲染
           value: false
         - $formkit: text
-          if: $get('enable_client_mermaid_render') === true
+          if: $get(enable_client_mermaid_render).value === true
           name: mermaid_selector
           label: mermaid-CSS选择器
           value: "text-diagram[data-type=mermaid]"
