@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "@halo-dev/ui-plugin-bundler-kit": "2.21.2",
-    "@iconify/json": "^2.2.348",
+    "@iconify-json/ic": "^1.2.4",
+    "@iconify-json/simple-icons": "^1.2.79",
     "@rsbuild/core": "^1.6.0",
     "@rushstack/eslint-patch": "^1.11.0",
     "@types/node": "^16.18.126",

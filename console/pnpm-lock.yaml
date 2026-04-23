@@ -33,9 +33,12 @@ importers:
       '@halo-dev/ui-plugin-bundler-kit':
         specifier: 2.21.2
         version: 2.21.2(@rsbuild/core@1.6.0)(@rsbuild/plugin-vue@1.2.0(@rsbuild/core@1.6.0)(@vue/compiler-sfc@3.5.16)(vue@3.5.16(typescript@4.7.4)))(@vitejs/plugin-vue@6.0.1(vite@7.1.12(@types/node@16.18.126)(jiti@2.6.1)(sass@1.89.2)(terser@5.42.0))(vue@3.5.16(typescript@4.7.4)))(axios@1.8.4)(vite@7.1.12(@types/node@16.18.126)(jiti@2.6.1)(sass@1.89.2)(terser@5.42.0))
-      '@iconify/json':
-        specifier: ^2.2.348
-        version: 2.2.348
+      '@iconify-json/ic':
+        specifier: ^1.2.4
+        version: 1.2.4
+      '@iconify-json/simple-icons':
+        specifier: ^1.2.79
+        version: 1.2.79
       '@rsbuild/core':
         specifier: ^1.6.0
         version: 1.6.0
@@ -390,8 +393,11 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
 
-  '@iconify/json@2.2.348':
-    resolution: {integrity: sha512-rfGlyB/MrZKVIUod6DKH+McF/81rpC8RoqbEXG3BT4AGLV0ZcnxsbtBnfT/921RsOqudUr5PPKRxbO+rs+Sjng==}
+  '@iconify-json/ic@1.2.4':
+    resolution: {integrity: sha512-pzPMmrZrBQuwT7nmtrYdkttun8KalRGgZPIL1Ny9KpF2zjRGIUPN+npTfuD3lrgO/OnSwAoJWuekQwBpt/Cqrw==}
+
+  '@iconify-json/simple-icons@1.2.79':
+    resolution: {integrity: sha512-aNyO7Fd1qej9oQfIyohYFRv0lhQLaZ+6UkK1c1qwax0MDPUOZOdq65MlU500kow97pD/W+b2u1And3e25eE24Q==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2215,9 +2221,6 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  pathe@1.1.2:
-    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
-
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
@@ -3046,10 +3049,13 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@iconify/json@2.2.348':
+  '@iconify-json/ic@1.2.4':
     dependencies:
       '@iconify/types': 2.0.0
-      pathe: 1.1.2
+
+  '@iconify-json/simple-icons@1.2.79':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/types@2.0.0': {}
 
@@ -4968,8 +4974,6 @@ snapshots:
   path-key@3.1.1: {}
 
   path-type@4.0.0: {}
-
-  pathe@1.1.2: {}
 
   pathe@2.0.3: {}
 
