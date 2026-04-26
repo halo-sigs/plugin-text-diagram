@@ -13,13 +13,17 @@
 
 ## 用法说明
 
-### 默认编辑器
+### 在默认编辑器中使用
 
 可以在指令菜单（/）中找到 **文本绘图** 菜单项，选择即可插入新的文本绘图块。
 
-### 文章页渲染
+> 在默认编辑器中使用时，无需开启客户 Mermaid 端渲染。但如果使用过旧版本的文本绘图，可能需要重新保存文章以更新渲染。
 
-此插件安装之后，支持渲染文本绘图。
+已知问题：由于是预渲染，因此无法切换主题。
+
+### 在第三方编辑器中使用
+
+在第三方编辑器中使用时，需要前往 **插件设置** 中开启客户 Mermaid 端渲染，并设置 mermaid_selector。
 
 配置项：
 1. dark_class_selector
@@ -30,11 +34,11 @@
    
    example：`html[class~=dark],html[data-color-scheme=dark]`
 
-3. mermaid_selector
+2. mermaid_selector
 
    CSS-Selector语法，用来查找渲染的mermaid-Dom。
 
-   默认值为：`text-diagram[data-type="mermaid"]`（本插件扩展默认编辑器生成的行内公式Dom），如需兼容其他编辑器，则设置为相应的Selector即可（CSS-Selector支持或，`,`分隔即可）
+   默认值为：`text-diagram[data-type="mermaid"]`（CSS-Selector支持或，`,`分隔即可）
 
    example：`.class1,.class2`
 

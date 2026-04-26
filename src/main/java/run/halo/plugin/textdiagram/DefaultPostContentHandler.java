@@ -23,7 +23,9 @@ public class DefaultPostContentHandler implements ReactivePostContentHandler {
     @Override
     public Mono<PostContentContext> handle(PostContentContext contentContext) {
         return reactiveSettingFetcher.fetch("basic", BasicConfig.class).map(basicConfig -> {
-            injectJS(contentContext, basicConfig);
+            if (basicConfig.isEnable_client_mermaid_render()) {
+                injectJS(contentContext, basicConfig);
+            }
             return contentContext;
         }).onErrorResume(e -> {
             log.error("TextDiagram PostContent handle failed", Throwables.getRootCause(e));
